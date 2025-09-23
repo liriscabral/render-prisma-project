@@ -17,6 +17,19 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
+app.get('/user/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await prisma.user.findUnique({ where: { id: Number(id) } });
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuário' });
+  }
+});
+
 app.listen(3000, () => {
   console.log("Server is running on localhost:3000");
 });
